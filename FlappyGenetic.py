@@ -3,7 +3,6 @@ import random
 import time
 import numpy as np
 
-
 pygame.init()
 
 class NeuralNetwork:
