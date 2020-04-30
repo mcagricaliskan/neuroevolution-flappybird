@@ -3,6 +3,7 @@ import random
 import time
 import numpy as np
 
+
 pygame.init()
 
 class NeuralNetwork:
@@ -63,7 +64,6 @@ class Bird:
         self.Bird_Network.Z = self.Pipe_Height
 
     def Bird_Loop(self):
-        #print(f"Skor = {self.Score}, Sonraki Pipe = {self.Bird_Distance_With_Pipe}")
         if self.Bird_Y < 0:
             return "Died"
         elif self.Bird_Y < 380:
@@ -97,7 +97,6 @@ class Pipe:
 
 
     def Move_Pipe(self, GameSpeed):
-        print(self.Pipe_id)
         self.Pipe_X -= 1 * GameSpeed
 
 
@@ -125,10 +124,10 @@ class GameCore:
 
 
         self.Pipe_List = [
-            Pipe(300, random.randint(180, 320), 0, self.Pipe_Image),
-            Pipe(450, random.randint(180, 320), 1, self.Pipe_Image),
-            Pipe(600, random.randint(180, 320), 2, self.Pipe_Image),
-            Pipe(750, random.randint(180, 320), 3, self.Pipe_Image)
+            Pipe(300, random.randint(220, 320), 0, self.Pipe_Image),
+            Pipe(460, random.randint(220, 320), 1, self.Pipe_Image),
+            Pipe(620, random.randint(220, 320), 2, self.Pipe_Image),
+            Pipe(780, random.randint(220, 320), 3, self.Pipe_Image)
 
 
         ]
@@ -179,11 +178,11 @@ class GameCore:
 
     def Crossover(self):
         self.Died_Bird = sorted(self.Died_Bird, key=lambda Bird: Bird.Score)
-        if self.Died_Bird[-1].Score == 0:
+        if self.Died_Bird[-1].Score == 0: # or self.Died_Bird[-1].Score == 1:
             self.create_new_generation()
         else:
             self.Next_Generation = []
-            last_best = int((95 * self.Population_Number) / 100)
+            last_best = int((98 * self.Population_Number) / 100)
             self.Next_Generation = []
             self.Next_Generation.extend(self.Population[last_best:])
             for Member in self.Next_Generation:
@@ -273,13 +272,12 @@ class GameCore:
 
     def restart_game(self):
         self.Pipe_List = [
-            Pipe(300, random.randint(180, 320), 0, self.Pipe_Image),
-            Pipe(450, random.randint(180, 320), 1, self.Pipe_Image),
-            Pipe(600, random.randint(180, 320), 2, self.Pipe_Image),
-            Pipe(750, random.randint(180, 320), 3, self.Pipe_Image)
+            Pipe(300, random.randint(220, 320), 0, self.Pipe_Image),
+            Pipe(460, random.randint(220, 320), 1, self.Pipe_Image),
+            Pipe(620, random.randint(220, 320), 2, self.Pipe_Image),
+            Pipe(780, random.randint(220, 320), 3, self.Pipe_Image)
 
         ]
-        self.Pipe_id = 4
 
         self.Crossover()
 
@@ -298,15 +296,18 @@ class GameCore:
         self.FPS = str(int(self.Clock.get_fps()))
         pygame.display.set_caption(f"Fps : {self.FPS}")
 
+        if len(self.Population) != 0:
+            print(f"Best Score = {self.Pipe_id}, prediction = {self.Population[-1].Bird_Network.predict()}, alive = {len(self.Population)}")
+
         for pipe in self.Pipe_List:
             if pipe.Pipe_X == -52:
-                pipe.Pipe_X = 548
+                pipe.Pipe_X = 588
+                pipe.Pipe_Lower_Y = random.randint(220, 320)
+                pipe.Pipe_Upper_Y = pipe.Pipe_Lower_Y - 420
                 pipe.Pipe_id = self.Pipe_id
                 self.Pipe_id += 1
 
             pipe.Move_Pipe(self.GameSpeed)
-
-
 
             for Member in self.Population:
                 if Member.Score == pipe.Pipe_id:
@@ -331,14 +332,17 @@ class GameCore:
                 self.Died_Bird.append(Member)
                 self.Population.remove(Member)
             Member.Bird_Jump()
+
         if len(self.Population) == 0:
             self.Generation_Timer += 1
             self.restart_game()
+            self.Pipe_id = 4
 
         self.Draw()
 
 
-Population_Number = 200
+Population_Number = 300
+
 
 Game = GameCore(Population_Number)
 while True:
