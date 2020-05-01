@@ -7,5 +7,6 @@ I think code is fine not messy. I will add some comment lines later.
 
 Sometimes I found best population so fast. I saw best generation on third generation.
 
+just a sample here 16th generation
 
 ![Sample](https://github.com/mcagricaliskan/NeuroEvolution-FlappyBird/blob/master/readme-files/flappy2.gif)
