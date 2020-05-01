@@ -8,4 +8,4 @@ I think code is fine not messy. I will add some comment lines later.
 Sometimes I found best population so fast. I saw best generation on third generation.
 
 
-![Sample 16. Generation and score ] (https://github.com/mcagricaliskan/NeuroEvolution-FlappyBird/blob/master/readme-files/flappy2.gif)
+![Sample 16. Generation and score ](https://github.com/mcagricaliskan/NeuroEvolution-FlappyBird/blob/master/readme-files/flappy2.gif)
