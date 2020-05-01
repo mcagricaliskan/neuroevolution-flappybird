@@ -124,10 +124,10 @@ class GameCore:
 
 
         self.Pipe_List = [
-            Pipe(300, random.randint(220, 320), 0, self.Pipe_Image),
-            Pipe(460, random.randint(220, 320), 1, self.Pipe_Image),
-            Pipe(620, random.randint(220, 320), 2, self.Pipe_Image),
-            Pipe(780, random.randint(220, 320), 3, self.Pipe_Image)
+            Pipe(300, random.randint(220, 340), 0, self.Pipe_Image),
+            Pipe(460, random.randint(220, 340), 1, self.Pipe_Image),
+            Pipe(620, random.randint(220, 340), 2, self.Pipe_Image),
+            Pipe(780, random.randint(220, 340), 3, self.Pipe_Image)
 
 
         ]
@@ -210,38 +210,40 @@ class GameCore:
                     chield_1_bias_1 = []
                     chield_1_bias_2 = []
 
-                    self.Prob = random.random()
                     for x,y in zip(member_1_weight_1, member_2_weight_1):
                         for i,k in zip(x,y):
-                            if self.Prob < 0.47:
+                            Prob = random.random()
+                            if Prob < 0.47:
                                 chield_1_weight_1.append(i)
-                            elif self.Prob < 0.94:
+                            elif Prob < 0.94:
                                 chield_1_weight_1.append(k)
                             else:
                                 chield_1_weight_1.append(random.uniform(-1,1))
 
-                    self.Prob = random.random()
                     for a, b in zip(member_1_weight_2, member_2_weight_2):
                         for c, d in zip(a, b):
-                            if self.Prob < 0.47:
+                            Prob = random.random()
+                            if Prob < 0.47:
                                 chield_1_weight_2.append(c)
-                            elif self.Prob < 0.94:
+                            elif Prob < 0.94:
                                 chield_1_weight_2.append(d)
                             else:
                                 chield_1_weight_2.append(random.uniform(-1,1))
 
                     for  t,y in zip(member_1_bias_1[0], member_2_bias_1[0]):
-                        if self.Prob < 0.47:
+                        Prob = random.random()
+                        if Prob < 0.47:
                             chield_1_bias_1.append(t)
-                        elif self.Prob < 0.94:
+                        elif Prob < 0.94:
                             chield_1_bias_1.append(y)
                         else:
                             chield_1_bias_1.append(random.uniform(-1,1))
 
                     for  q,w in zip(member_1_bias_2, member_2_bias_2):
-                        if self.Prob < 0.47:
+                        Prob = random.random()
+                        if Prob < 0.47:
                             chield_1_bias_2.append(q)
-                        elif self.Prob < 0.94:
+                        elif Prob < 0.94:
                             chield_1_bias_2.append(w)
                         else:
                             chield_1_bias_2.append(random.uniform(-1,1))
@@ -272,10 +274,10 @@ class GameCore:
 
     def restart_game(self):
         self.Pipe_List = [
-            Pipe(300, random.randint(220, 320), 0, self.Pipe_Image),
-            Pipe(460, random.randint(220, 320), 1, self.Pipe_Image),
-            Pipe(620, random.randint(220, 320), 2, self.Pipe_Image),
-            Pipe(780, random.randint(220, 320), 3, self.Pipe_Image)
+            Pipe(300, random.randint(220, 340), 0, self.Pipe_Image),
+            Pipe(460, random.randint(220, 340), 1, self.Pipe_Image),
+            Pipe(620, random.randint(220, 340), 2, self.Pipe_Image),
+            Pipe(780, random.randint(220, 340), 3, self.Pipe_Image)
 
         ]
 
@@ -302,7 +304,7 @@ class GameCore:
         for pipe in self.Pipe_List:
             if pipe.Pipe_X == -52:
                 pipe.Pipe_X = 588
-                pipe.Pipe_Lower_Y = random.randint(220, 320)
+                pipe.Pipe_Lower_Y = random.randint(220, 340)
                 pipe.Pipe_Upper_Y = pipe.Pipe_Lower_Y - 420
                 pipe.Pipe_id = self.Pipe_id
                 self.Pipe_id += 1
