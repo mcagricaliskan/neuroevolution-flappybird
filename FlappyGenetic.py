@@ -17,21 +17,20 @@ class NeuralNetwork:
         self.bias1 = bias1
         self.bias2 = bias2
 
-
     def sigmoid(self, x, deriv=False):
         if deriv == True:
             return x * (1 - x)
         return 1 / (1 + np.exp(-x))
 
     def predict(self):
-        self.Data = np.array([self.X,self.Y,self.Z])
-        self.layer2 = self.sigmoid(np.dot(self.Data, self.weights1) + self.bias1)
-        self.layer3 = self.sigmoid(np.dot(self.layer2, self.weights2) + self.bias2)
+        self.Data = np.array([[self.X],[self.Y],[self.Z]])
+        self.layer2 = self.sigmoid(np.dot(self.weights1, self.Data) + self.bias1) # matris çarpımı
+        self.layer3 = self.sigmoid(np.dot(self.weights2, self.layer2) + self.bias2) # matris çarpımı
         return self.layer3
 
-class Bird:
-    def __init__(self,Bird_Image, Bird_Mask, weights1 = np.random.rand(3,7) - 0.5,weights2 = np.random.rand(7,1) - 0.5,
-                 bias1 = np.random.rand(1, 7) - 0.5, bias2 = np.random.rand(1, 1) - 0.5):
+class Bird: # kuş
+    def __init__(self,Bird_Image, Bird_Mask, weights1 = np.random.rand(7,3) - 0.5,weights2 = np.random.rand(1,7) - 0.5,
+                 bias1 = np.random.rand(7, 1) - 0.5, bias2 = np.random.rand(1, 1) - 0.5):
         self.Bird_X = 50
         self.Bird_Y = 50
         self.Gravity = 0.75
@@ -43,7 +42,8 @@ class Bird:
         self.bias_1 = bias1
         self.bias_2 = bias2
 
-        self.Score = 0 # Fitness of bird
+        self.Score = 0
+
         self.Pipe_Y = 0
         self.Pipe_distance = 0
 
@@ -53,7 +53,6 @@ class Bird:
         self.Bird_Network = NeuralNetwork(self.Bird_Y, self.Bird_Distance_With_Pipe,
                                           self.Pipe_Height, self.weight_1, self.weight_2,
                                           self.bias_1, self.bias_2)
-
 
     def Draw_Bird(self,window):
         window.blit(self.Bird_Image,(int(self.Bird_X), int(self.Bird_Y)))
@@ -71,8 +70,6 @@ class Bird:
             self.Gravity += self.acc
         else:
             return "Died"
-
-
 
     def Bird_Jump(self):
         if self.Bird_Network.predict() < 0.5:
@@ -128,12 +125,8 @@ class GameCore:
             Pipe(460, random.randint(220, 340), 1, self.Pipe_Image),
             Pipe(620, random.randint(220, 340), 2, self.Pipe_Image),
             Pipe(780, random.randint(220, 340), 3, self.Pipe_Image)
-
-
         ]
         self.Pipe_id = 4
-
-
         ### Genetic ####
 
         self.Population = []
@@ -146,7 +139,6 @@ class GameCore:
             weight_1, weight_2, bias1 , bias2 = self.create_weights()
             self.Population.append(Bird(self.Bird_Image,self.Bird_Mask, weight_1, weight_2, bias1 , bias2))
 
-        self.Deneme = []
 
     def MaskCollision(self, Masked_Image1, Image1_X, Image1_Y, Masked_Image2, Image2_X, Image2_Y):
         offset = (round(Image2_X - Image1_X), round(Image2_Y - Image1_Y))
@@ -164,21 +156,23 @@ class GameCore:
         for i in self.Population:
             i.Draw_Bird(self.window)
 
+
         self.window.blit(self.Font_T.render("" + str(self.Generation_Timer), True, (255, 255, 255)), (20, 20))
 
         self.Clock.tick(60)
         pygame.display.update()
 
     def create_weights(self):
-        weights1 = np.random.rand(3, 7) - 0.5
-        weights2 = np.random.rand(7, 1) - 0.5
-        bias1 = np.random.rand(1, 7) - 0.5
+        weights1 = np.random.rand(7, 3) - 0.5
+        weights2 = np.random.rand(1, 7) - 0.5
+        bias1 = np.random.rand(7, 1) - 0.5
         bias2 = np.random.rand(1, 1) - 0.5
         return weights1, weights2, bias1, bias2
 
     def Crossover(self):
         self.Died_Bird = sorted(self.Died_Bird, key=lambda Bird: Bird.Score)
-        if self.Died_Bird[-1].Score == 0: # or self.Died_Bird[-1].Score == 1:
+
+        if self.Died_Bird[-1].Score == 0:
             self.create_new_generation()
         else:
             self.Next_Generation = []
@@ -218,7 +212,7 @@ class GameCore:
                             elif Prob < 0.94:
                                 chield_1_weight_1.append(k)
                             else:
-                                chield_1_weight_1.append(random.uniform(-1,1))
+                                chield_1_weight_1.append(random.uniform(-0.5,0.5))
 
                     for a, b in zip(member_1_weight_2, member_2_weight_2):
                         for c, d in zip(a, b):
@@ -228,25 +222,26 @@ class GameCore:
                             elif Prob < 0.94:
                                 chield_1_weight_2.append(d)
                             else:
-                                chield_1_weight_2.append(random.uniform(-1,1))
+                                chield_1_weight_2.append(random.uniform(-0.5,0.5))
 
-                    for  t,y in zip(member_1_bias_1[0], member_2_bias_1[0]):
-                        Prob = random.random()
-                        if Prob < 0.47:
-                            chield_1_bias_1.append(t)
-                        elif Prob < 0.94:
-                            chield_1_bias_1.append(y)
-                        else:
-                            chield_1_bias_1.append(random.uniform(-1,1))
+                    for t,y in zip(member_1_bias_1, member_2_bias_1):
+                        for v,b in zip(t,y):
+                            Prob = random.random()
+                            if Prob < 0.47:
+                                chield_1_bias_1.append(v)
+                            elif Prob < 0.94:
+                                chield_1_bias_1.append(b)
+                            else:
+                                chield_1_bias_1.append(random.uniform(-0.5,0.5))
 
-                    for  q,w in zip(member_1_bias_2, member_2_bias_2):
+                    for q,w in zip(member_1_bias_2, member_2_bias_2):
                         Prob = random.random()
                         if Prob < 0.47:
                             chield_1_bias_2.append(q)
                         elif Prob < 0.94:
                             chield_1_bias_2.append(w)
                         else:
-                            chield_1_bias_2.append(random.uniform(-1,1))
+                            chield_1_bias_2.append(random.uniform(-0.5,0.5))
 
                     chield_1_weight_1 = np.array(chield_1_weight_1)
                     chield_1_weight_2 = np.array(chield_1_weight_2)
@@ -254,17 +249,18 @@ class GameCore:
                     chield_1_bias_1 = np.array(chield_1_bias_1)
                     chield_1_bias_2 = np.array(chield_1_bias_2)
 
-                    chield_1_weight_1 = chield_1_weight_1.reshape((3,7))
-                    chield_1_weight_2 = chield_1_weight_2.reshape((7,1))
-                    chield_1_bias_1 = chield_1_bias_1.reshape((1,7))
+                    chield_1_weight_1 = chield_1_weight_1.reshape((7,3))
+                    chield_1_weight_2 = chield_1_weight_2.reshape((1,7))
+                    chield_1_bias_1 = chield_1_bias_1.reshape((7,1))
                     chield_1_bias_2 = chield_1_bias_2.reshape((1,1))
 
                     self.Next_Generation.append(Bird(self.Bird_Image,self.Bird_Mask,
-                                                     chield_1_weight_1,chield_1_weight_2,
-                                                     chield_1_bias_1,chield_1_bias_2))
+                                                     chield_1_weight_1, chield_1_weight_2,
+                                                     chield_1_bias_1, chield_1_bias_2))
 
                 else:
                     break
+
             self.Population = self.Next_Generation
 
     def create_new_generation(self):
@@ -333,6 +329,7 @@ class GameCore:
             if Member.Bird_Loop() == "Died":
                 self.Died_Bird.append(Member)
                 self.Population.remove(Member)
+
             Member.Bird_Jump()
 
         if len(self.Population) == 0:
