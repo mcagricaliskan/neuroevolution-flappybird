@@ -3,9 +3,9 @@ I coded clone of the flappy bird. You can find game's code [HERE](https://github
 
 I had to code neural network from scratch. Because my computer not good enough for using library and creating bigger population.
 
-I think code is fine not messy. I will add some comment lines later.
+I think code is fine and not messy. I will add some comment lines later.
 
-Sometimes I found best population so fast. I saw best generation on third generation.
+Sometimes I found best population so fast. I saw best generation on third cycle.
 
 just a sample here 16th generation
 
